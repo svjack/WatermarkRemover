@@ -10,9 +10,11 @@
   待处理视频放在`video`文件夹下，所有视频尺寸须保持一致。
 
 ### 3. 运行程序
+### 剪辑矩形区域
+  `python .\video_cliper.py --input .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析  -f 1000`
+### 去水印
   `python watermark_remover.py`
-###
-  `python watermark_remover_pre_select.py`
+
 ### 4.选择水印区域
   鼠标框选水印对应区域后按**SPACE**或**ENTER**键，处理后视频在`output`文件夹下，格式为mp4。
 

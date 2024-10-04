@@ -157,6 +157,7 @@ if __name__ == "__main__":
             print(f"Invalid input path: {input_path}")
             exit(1)
 
+    #### 三个”集中“： 集中计算 集中选取 集中处理
     bright_frames_dict = calculate_bright_frames_for_all_videos(input_path, top_k, time_window, frame_skip)
     start_times_dict = select_start_times(input_path, bright_frames_dict)
     process_selected_frames(input_path, output_dir, start_times_dict)

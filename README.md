@@ -19,7 +19,9 @@
   `python .\watermark_remover.py  --input  .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析_clip`
 ###### 4 循环视频
   `python .\video_recer.py --input .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析_clip_rmwtmk  -s 360`
-#### 跳过+剪辑+去水印（多区域选择）+循环
+###### 5 留下光明（跳过开头黑暗片段）
+  `python video_darkness_skipper.py -i .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析_skip_3个  -k 10 -w 10 -s 10`
+#### 跳过首尾+剪辑+去水印（多区域选择）+循环
   `python .\video_pipeline_multi_select.py  --input  .\【原神】须弥3.0雨林音乐实录合集 -s 5 -e 10 -m 120 -c auto -w auto -l 360`
 
 ### 4.选择水印区域

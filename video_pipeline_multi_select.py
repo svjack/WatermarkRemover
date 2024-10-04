@@ -43,12 +43,24 @@ def select_roi(frame, instructions):
     font = cv2.FONT_HERSHEY_SIMPLEX
     cv2.putText(display_frame, instructions, (10, 30), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
-    r = cv2.selectROI(display_frame)
+    rois = []
+    while True:
+        r = cv2.selectROI("Select ROI", display_frame)
+        if r == (0, 0, 0, 0):  # 如果用户按下c键，退出选择
+            break
+        rois.append(r)
+        cv2.rectangle(display_frame, (r[0], r[1]), (r[0] + r[2], r[1] + r[3]), (0, 255, 0), 2)
+        cv2.imshow("Select ROI", display_frame)
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord('c'):  # 如果用户按下 'c' 键，取消选择
+            rois = []
+            break
+
     cv2.destroyAllWindows()
 
-    r_original = (int(r[0] / scale_factor), int(r[1] / scale_factor), int(r[2] / scale_factor), int(r[3] / scale_factor))
+    rois_original = [(int(r[0] / scale_factor), int(r[1] / scale_factor), int(r[2] / scale_factor), int(r[3] / scale_factor)) for r in rois]
 
-    return r_original
+    return rois_original
 
 def skip_and_limit_video(video_clip, skip_start, skip_end, max_duration):
     total_duration = video_clip.duration
@@ -65,9 +77,11 @@ def skip_and_limit_video(video_clip, skip_start, skip_end, max_duration):
 
     return skipped_clip
 
-def clip_video(video_clip, roi, max_frames=None):
+def clip_video(video_clip, rois, max_frames=None):
     def clip_frame(frame):
-        return frame[roi[1]:roi[1] + roi[3], roi[0]:roi[0] + roi[2]]
+        for roi in rois:
+            frame = frame[roi[1]:roi[1] + roi[3], roi[0]:roi[0] + roi[2]]
+        return frame
 
     if max_frames is not None:
         video_clip = video_clip.subclip(0, min(video_clip.duration, max_frames / video_clip.fps))
@@ -90,9 +104,11 @@ def generate_watermark_mask(video_clip, num_frames=10, min_frame_count=7):
     frame_indices = [int(i * total_frames / num_frames) for i in range(num_frames)]
 
     frames = [video_clip.get_frame(idx / video_clip.fps) for idx in frame_indices]
-    r_original = select_roi(frames[0], "Select ROI for watermark and press SPACE or ENTER")
+    rois = select_roi(frames[0], "Select ROI for watermark and press SPACE or ENTER. Press 'c' to finish.")
 
-    masks = [detect_watermark_adaptive(frame, r_original) for frame in frames]
+    masks = []
+    for roi in rois:
+        masks.extend([detect_watermark_adaptive(frame, roi) for frame in frames])
 
     final_mask = sum((mask == 255).astype(np.uint8) for mask in masks)
     final_mask = np.where(final_mask >= min_frame_count, 255, 0).astype(np.uint8)
@@ -154,7 +170,7 @@ def process_video_pipeline(input_path, output_dir, skip_start=0, skip_end=0, max
         if clip_roi is not None:
             if clip_roi == "auto":
                 frame = get_first_valid_frame(video_clip)
-                clip_roi = select_roi(frame, "Select ROI for clipping and press SPACE or ENTER")
+                clip_roi = select_roi(frame, "Select ROI for clipping and press SPACE or ENTER. Press 'c' to finish.")
             video_clip = clip_video(video_clip, clip_roi, max_frames)
             output_video_path += "_clip"
 
@@ -174,9 +190,9 @@ def process_video_pipeline(input_path, output_dir, skip_start=0, skip_end=0, max
         print(f"Successfully processed {video_name}")
 
 '''
-python video_pipeline.py -i input_video.mp4 -o output_dir -s 5 -e 10 -m 120 -c auto -w auto -l 360
+python video_pipeline_multi_select.py -i input_video.mp4 -o output_dir -s 5 -e 10 -m 120 -c auto -w auto -l 360
 
-python .\video_pipeline.py  --input .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析_3个  -s 5 -e 10 -m 120 -c auto -w auto -l 360
+python .\video_pipeline_multi_select.py  --input  .\【原神】须弥3.0雨林音乐实录合集 -s 5 -e 10 -m 120 -c auto -w auto -l 360
 '''
 
 if __name__ == "__main__":

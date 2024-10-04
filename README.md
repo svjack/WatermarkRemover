@@ -13,7 +13,7 @@
 ### 剪辑矩形区域
   `python .\video_cliper.py --input .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析  -f 1000`
 ### 去水印
-  `python watermark_remover.py`
+  `python .\watermark_remover.py  --input  .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析_clip`
 
 ### 4.选择水印区域
   鼠标框选水印对应区域后按**SPACE**或**ENTER**键，处理后视频在`output`文件夹下，格式为mp4。

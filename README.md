@@ -19,8 +19,8 @@
   `python .\watermark_remover.py  --input  .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析_clip`
 ###### 4 循环视频
   `python .\video_recer.py --input .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析_clip_rmwtmk  -s 360`
-#### 跳过+剪辑+去水印+循环
-  `python .\video_pipeline.py  --input .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析_3个  -s 5 -e 10 -m 120 -c auto -w auto -l 360`
+#### 跳过+剪辑+去水印（多区域选择）+循环
+  `python .\video_pipeline_multi_select.py  --input  .\【原神】须弥3.0雨林音乐实录合集 -s 5 -e 10 -m 120 -c auto -w auto -l 360`
 
 ### 4.选择水印区域
   鼠标框选水印对应区域后按**SPACE**或**ENTER**键，处理后视频在`output`文件夹下，格式为mp4。

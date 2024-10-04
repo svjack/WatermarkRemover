@@ -4,6 +4,7 @@ import glob
 from moviepy.editor import VideoFileClip
 import os
 from tqdm import tqdm
+import argparse
 
 def ensure_directory_exists(directory):
     if not os.path.exists(directory):
@@ -79,22 +80,51 @@ def generate_watermark_mask(video_clip, num_frames=10, min_frame_count=7):
     kernel = np.ones((5, 5), np.uint8)
     return cv2.dilate(final_mask, kernel)
 
-def process_video(video_clip, output_path, apply_mask_func):
+def process_video(video_clip, output_path, apply_mask_func, max_frames=None):
     total_frames = int(video_clip.duration * video_clip.fps)
     progress_bar = tqdm(total=total_frames, desc="Processing Frames", unit="frames")
 
+    if max_frames is not None:
+        video_clip = video_clip.subclip(0, min(video_clip.duration, max_frames / video_clip.fps))
+
     def process_frame(frame):
         result = apply_mask_func(frame)
-        progress_bar.update(1000)
+        progress_bar.update(1)
         return result
-    
-    processed_video = video_clip.fl_image(process_frame, apply_to=["each"])
+
+    processed_video = video_clip.fl_image(process_frame)
     processed_video.write_videofile(f"{output_path}.mp4", codec="libx264")
 
 if __name__ == "__main__":
-    output_dir = "output"
+    parser = argparse.ArgumentParser(description="Process videos to detect and remove watermarks.")
+    parser.add_argument("-i", "--input", default="video", help="Path to the input video file or directory containing videos. Default is 'video'.")
+    parser.add_argument("-o", "--output", default=None, help="Path to the output directory. If not provided, it will be generated as input_path + '_rmwtmk'.")
+    parser.add_argument("-f", "--frames", type=int, default=None, help="Number of frames to process. If not provided, the entire video will be processed.")
+    args = parser.parse_args()
+
+    input_path = args.input
+    output_dir = args.output
+    max_frames = args.frames
+
+    # 如果未提供 output_dir，则根据 input_path 生成
+    if output_dir is None:
+        if os.path.isfile(input_path):
+            output_dir = os.path.splitext(input_path)[0] + "_rmwtmk"
+        elif os.path.isdir(input_path):
+            output_dir = input_path + "_rmwtmk"
+        else:
+            print(f"Invalid input path: {input_path}")
+            exit(1)
+
     ensure_directory_exists(output_dir)
-    videos = [f for f in glob.glob("video/*") if is_valid_video_file(f)]
+
+    if os.path.isfile(input_path):
+        videos = [input_path] if is_valid_video_file(input_path) else []
+    elif os.path.isdir(input_path):
+        videos = [f for f in glob.glob(os.path.join(input_path, "*")) if is_valid_video_file(f)]
+    else:
+        print(f"Invalid input path: {input_path}")
+        exit(1)
 
     watermark_mask = None
 
@@ -106,5 +136,5 @@ if __name__ == "__main__":
         mask_func = lambda frame: cv2.inpaint(frame, watermark_mask, 3, cv2.INPAINT_NS)
         video_name = os.path.basename(video)
         output_video_path = os.path.join(output_dir, os.path.splitext(video_name)[0])
-        process_video(video_clip, output_video_path, mask_func)
+        process_video(video_clip, output_video_path, mask_func, max_frames)
         print(f"Successfully processed {video_name}")

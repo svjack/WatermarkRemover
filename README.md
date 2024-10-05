@@ -23,6 +23,8 @@
   `python video_darkness_skipper.py -i .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析_skip_3个  -k 10 -w 10 -s 10`
 #### 跳过首尾+剪辑+去水印（多区域选择）+循环
   `python .\video_pipeline_multi_select.py  --input  .\【原神】须弥3.0雨林音乐实录合集 -s 5 -e 10 -m 120 -c auto -w auto -l 360`
+#### 视频调整尺寸
+  `python video_resizer.py -i .\原神风景视频（去水印）拣选后_少量文件 -w 640 -ht 480`
 
 ### 4.选择水印区域
   鼠标框选水印对应区域后按**SPACE**或**ENTER**键，处理后视频在`output`文件夹下，格式为mp4。

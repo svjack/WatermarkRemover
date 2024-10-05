@@ -28,22 +28,32 @@ def calculate_brightness(frame):
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     return np.mean(gray_frame)
 
-def select_bright_frames(video_clip, top_k=10, time_window=10, frame_skip=10):
+def select_bright_frames(video_clip, top_k=10, time_window=10, frame_skip=10, take_one_step = 50):
+    assert take_one_step > 0
+    assert type(take_one_step) == type(0)
     total_frames = int(video_clip.fps * video_clip.duration)
     total_duration = video_clip.duration
     window_size = total_duration / time_window
 
     bright_frames = []
 
-    for window in range(time_window):
+    print("start time_window")
+    for window in tqdm(range(time_window)):
         start_time = window * window_size
         end_time = (window + 1) * window_size
 
         window_frames = []
-        for i in range(int(start_time * video_clip.fps), int(end_time * video_clip.fps), frame_skip):
-            frame = video_clip.get_frame(i / video_clip.fps)
-            brightness = calculate_brightness(frame)
-            window_frames.append((i, brightness))
+        for i in tqdm(range(int(start_time * video_clip.fps), int(end_time * video_clip.fps), frame_skip)):
+            if i % take_one_step == 0:
+                frame = video_clip.get_frame(i / video_clip.fps)
+                brightness = calculate_brightness(frame)
+                window_frames.append((i, brightness))
+        if not window_frames:
+            for i in tqdm(range(int(start_time * video_clip.fps), int(end_time * video_clip.fps), frame_skip)):
+                if i % 1 == 0:
+                    frame = video_clip.get_frame(i / video_clip.fps)
+                    brightness = calculate_brightness(frame)
+                    window_frames.append((i, brightness))
 
         # 选择当前时间窗口内最明亮的帧
         window_frames.sort(key=lambda x: x[1], reverse=True)

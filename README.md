@@ -23,6 +23,8 @@
   `python video_darkness_skipper.py -i .\【原神延时摄影】全图27个钓鱼点白天黑夜风景全赏析_skip_3个  -k 10 -w 10 -s 10`
 ###### 6 视频调整尺寸
   `python video_resizer.py -i .\原神风景视频（去水印）拣选后_少量文件 -w 640 -ht 480`
+###### 7 去除视频中的声音
+  `python video_sliencer.py -i .\原神风景视频（去水印）拣选后_单个文件夹_改变到2560x1080_skip_resized_裁剪_到人物_2560`
 
 #### 跳过首尾+剪辑+去水印（多区域选择）+循环
   `python .\video_pipeline_multi_select.py  --input  .\【原神】须弥3.0雨林音乐实录合集 -s 5 -e 10 -m 120 -c auto -w auto -l 360`

@@ -95,7 +95,10 @@ def process_video(video_clip, output_path, apply_mask_func, max_frames=None):
         return result
 
     processed_video = video_clip.fl_image(process_frame)
-    processed_video.write_videofile(f"{output_path}.mp4", codec="libx264")
+    try:
+        processed_video.write_videofile(f"{output_path}.mp4", codec="libx264")
+    except:
+        print("clipped_video write error")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process videos to detect and remove watermarks.")

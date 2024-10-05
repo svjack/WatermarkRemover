@@ -131,7 +131,10 @@ def process_video(video_clip, output_path, apply_mask_func, max_frames=None):
         return result
 
     processed_video = video_clip.fl_image(process_frame)
-    processed_video.write_videofile(f"{output_path}.mp4", codec="libx264")
+    try:
+        processed_video.write_videofile(f"{output_path}.mp4", codec="libx264")
+    except:
+        print("clipped_video write error")
 
 def loop_video(video_clip, loop_duration):
     total_duration = video_clip.duration
@@ -187,7 +190,10 @@ def process_video_pipeline(input_path, output_dir, skip_start=0, skip_end=0, max
         # Step 4: Loop video
         if loop_duration is not None:
             looped_video = loop_video(video_clip, loop_duration)
-            looped_video.write_videofile(output_video_path + "_rec.mp4", codec="libx264")
+            try:
+                looped_video.write_videofile(output_video_path + "_rec.mp4", codec="libx264")
+            except:
+                print("clipped_video write error")
 
         print(f"Successfully processed {video_name}")
 

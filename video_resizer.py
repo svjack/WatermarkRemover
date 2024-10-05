@@ -31,8 +31,10 @@ def resize_video(video_clip, width, height):
 def process_video(video_clip, output_path, width, height):
     resized_video = resize_video(video_clip, width, height)
     if resized_video:
-        resized_video.write_videofile(f"{output_path}.mp4", codec="libx264")
-
+        try:
+            resized_video.write_videofile(f"{output_path}.mp4", codec="libx264")
+        except:
+            print("clipped_video write error")
 '''
 python video_resizer.py -i .\原神风景视频（去水印）拣选后_少量文件 -w 640 -ht 480
 '''

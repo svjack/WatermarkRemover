@@ -98,7 +98,10 @@ def interactive_frame_selection(video_clip, bright_frames):
 def process_video(video_clip, output_path, start_time):
     if start_time is not None:
         clipped_video = video_clip.subclip(start_time)
-        clipped_video.write_videofile(f"{output_path}.mp4", codec="libx264")
+        try:
+            clipped_video.write_videofile(f"{output_path}.mp4", codec="libx264")
+        except:
+            print("clipped_video write error")
     else:
         print("No frame selected.")
 

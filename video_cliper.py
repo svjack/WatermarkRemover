@@ -51,7 +51,10 @@ def clip_video(video_clip, roi, output_path, max_frames=None):
         video_clip = video_clip.subclip(0, min(video_clip.duration, max_frames / video_clip.fps))
 
     clipped_video = video_clip.fl_image(clip_frame)
-    clipped_video.write_videofile(output_path, codec="libx264")
+    try:
+        clipped_video.write_videofile(output_path, codec="libx264")
+    except:
+        print("clipped_video write error")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Clip a video based on a selected region of interest (ROI).")

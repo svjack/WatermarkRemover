@@ -39,7 +39,10 @@ def loop_video(video_clip, loop_duration):
 
 def process_video(video_clip, output_path, loop_duration):
     looped_video = loop_video(video_clip, loop_duration)
-    looped_video.write_videofile(f"{output_path}.mp4", codec="libx264")
+    try:
+        looped_video.write_videofile(f"{output_path}.mp4", codec="libx264")
+    except:
+        print("clipped_video write error")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Loop a video for a specified duration.")

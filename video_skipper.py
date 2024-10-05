@@ -44,7 +44,10 @@ def skip_and_limit_video(video_clip, skip_start, skip_end, max_duration):
 def process_video(video_clip, output_path, skip_start, skip_end, max_duration):
     skipped_video = skip_and_limit_video(video_clip, skip_start, skip_end, max_duration)
     if skipped_video:
-        skipped_video.write_videofile(f"{output_path}.mp4", codec="libx264")
+        try:
+            skipped_video.write_videofile(f"{output_path}.mp4", codec="libx264")
+        except:
+            print("clipped_video write error")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Skip the start and end of a video for specified durations and limit the maximum duration.")

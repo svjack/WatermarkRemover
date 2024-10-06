@@ -25,6 +25,8 @@
   `python video_resizer.py -i .\原神风景视频（去水印）拣选后_少量文件 -w 640 -ht 480`
 ###### 7 去除视频中的声音
   `python video_sliencer.py -i .\原神风景视频（去水印）拣选后_单个文件夹_改变到2560x1080_skip_resized_裁剪_到人物_2560`
+###### 8 视频变速
+  `python video_speedchanger.py -i .\原神变速测试95  -s 0.95`
 
 #### 跳过首尾+剪辑+去水印（多区域选择）+循环
   `python .\video_pipeline_multi_select.py  --input  .\【原神】须弥3.0雨林音乐实录合集 -s 5 -e 10 -m 120 -c auto -w auto -l 360`

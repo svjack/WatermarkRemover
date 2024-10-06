@@ -33,6 +33,7 @@ def process_video(video_clip, output_path):
         print("Error writing video without audio")
 
 '''
+python video_sliencer.py -i .\原神风景视频（去水印）拣选后_单个文件夹_改变到2560x1080_skip_resized_裁剪_到人物_2560_温蒂
 python video_sliencer.py -i .\原神风景视频（去水印）拣选后_单个文件夹_改变到2560x1080_skip_resized_裁剪_到人物_2560
 '''
 
